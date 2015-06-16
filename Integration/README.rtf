@@ -1,0 +1,22 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf360
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red28\green0\blue207;\red170\green13\blue145;}
+\margl1440\margr1440\vieww10760\viewh8780\viewkind0
+\deftab560
+\pard\tx560\pardeftab560\ql\qnatural\pardirnatural
+
+\f0\fs22 \cf0 \CocoaLigature0 Author: Nicholas Battista\
+Date of Last Revision: August \cf2 14\cf0 , \cf2 2014\cf0 \
+\
+This function numerically integrates a function, f(x) between integration\
+bounds a and b. This function it integrates is found on line \cf2 112.\cf0 \
+\
+It computes the Newton-Cotes stencil \cf3 for\cf0  a particular\
+number of quadrature points, i.e., finds the uniformly spaced quadrature\
+pts over [a,b] as well as the quadrature coefficients.\
+\
+It will then compare the numerically integrated solution to an exact\
+solution \cf3 if\cf0  you feed it an exact solution to the integral \cf3 for\cf0  testing. It\
+then loops over many different Newton-Cotes stencils (i.e., \cf3 for\cf0  different\
+numbers of quadrature pts and then performs a convergence study to see how\
+error decays with higher order stencils.}
