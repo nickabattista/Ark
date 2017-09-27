@@ -1,10 +1,12 @@
 function Newton_Cotes()
 
 %Author: Nicholas Battista
+%Institution: The College of NJ (TCNJ)
+%Email: nickabattista[at]gmail[.]com
 %Date of Last Revision: August 14, 2014
 
 %This function numerically integrates a function, f(x) between integration
-%bounds a and b. This function it integrates is found on line 112.
+%bounds a and b. This function it integrates is found on line 134.
 
 %It computes the Newton-Cotes stencil for a particular
 %number of quadrature points, i.e., finds the uniformly spaced quadrature
@@ -23,7 +25,7 @@ b = 1;
 
 %Number of Quadrature Pts for Looping
 N_S = 1; 
-N_E = 14;
+N_E = 18;
 
 %Number of Quad-pts
 err = zeros(1,N_E);
