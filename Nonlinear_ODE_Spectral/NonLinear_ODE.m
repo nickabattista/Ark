@@ -10,13 +10,13 @@
 %
 % Running the code solves the following non-linear ODE:
 % 
-%      Laplacian(u) + 1/(1+u)^7 = f(x,y)
+%      Laplacian(u) + 1/(1+u)^7 = f(r)
 %
 % with
 %
-%      f(x,y) = 8*r^2/(1+r^2)^3 - 6/(1+r^2)^2 + 1/(1+ (1/(1+r^2)) )^7,  [FAST CONV.] 
+%      f(r) = 8*r^2/(1+r^2)^3 - 6/(1+r^2)^2 + 1/(1+ (1/(1+r^2)) )^7,  [FAST CONV.] 
 %      or 
-%      f(x,y) = (r^2-6*r+6)*exp(-r) + 1/(1+(r^2*exp(-r)))^7,  [SLOW CONV.] 
+%      f(r) = (r^2-6*r+6)*exp(-r) + 1/(1+(r^2*exp(-r)))^7,  [SLOW CONV.] 
 %
 % with Dirichelet BCs,
 %
@@ -237,7 +237,7 @@ return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% FUNCTION: gives the value of the approximation series, u(x,y)
+% FUNCTION: gives the value of the approximation series, u(r)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -257,7 +257,7 @@ return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% FUNCTION: gives the value of the derivative of the approximation series, u'(x,y)
+% FUNCTION: gives the value of the derivative of the approximation series, u'(r)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -277,7 +277,7 @@ return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% FUNCTION: computes Laplacian in new coordinates, del^2(u)(x,y)
+% FUNCTION: computes Laplacian in new coordinates, del^2(u)(r)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -628,11 +628,11 @@ fprintf('Author: Nicholas A. Battista \n');
 fprintf('Last update: September 2018\n\n');
 fprintf('Running the code solves the following non-linear ODE:\n\n');
 
-fprintf('     Laplacian(u) + 1/(1+u)^7 = f(x,y)\n\n');
+fprintf('     Laplacian(u) + 1/(1+u)^7 = f(r)\n\n');
 fprintf('with\n');
-fprintf('     f(x,y) = 8*r^2/(1+r^2)^3 - 6/(1+r^2)^2 + 1/(1+ (1/(1+r^2)) )^7,  [FAST CONV.] \n\n');
+fprintf('     f(r) = 8*r^2/(1+r^2)^3 - 6/(1+r^2)^2 + 1/(1+ (1/(1+r^2)) )^7,  [FAST CONV.] \n\n');
 fprintf('     or \n\n');
-fprintf('     f(x,y) = (r^2-6*r+6)*exp(-r) + 1/(1+(r^2*exp(-r)))^7,  [SLOW CONV.] \n\n');
+fprintf('     f(r) = (r^2-6*r+6)*exp(-r) + 1/(1+(r^2*exp(-r)))^7,  [SLOW CONV.] \n\n');
 fprintf('with Dirichelet BCs,\n');
 fprintf('     du/dr(0)=0, u(r->inf) = 0 \n\n');
 fprintf('and exact solution,\n');
