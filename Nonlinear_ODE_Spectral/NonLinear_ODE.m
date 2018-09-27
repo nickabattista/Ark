@@ -1,29 +1,36 @@
-function NonLinear_ODE
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
 % This is a non-linear pseudo-spectral ODE solver over all R
 %
 % Author: Nicholas A. Battista 
-% University: Rochester Institute of Technology
+% Institution (current): The College of New Jersey (TCNJ)
+% Institution (created): Rochester Institute of Technology
 % Date Created: August 2009
-% Last update: September 2010
+% Last update: September 2018
 %
 % Running the code solves the following non-linear ODE:
 % 
 %      Laplacian(u) + 1/(1+u)^7 = f(x,y)
+%
 % with
+%
 %      f(x,y) = 8*r^2/(1+r^2)^3 - 6/(1+r^2)^2 + 1/(1+ (1/(1+r^2)) )^7,  [FAST CONV.] 
-%      or \n
+%      or 
 %      f(x,y) = (r^2-6*r+6)*exp(-r) + 1/(1+(r^2*exp(-r)))^7,  [SLOW CONV.] 
+%
 % with Dirichelet BCs,
-%      du/dr(0)=0, u(r->inf) = 0 
+%
+%      du/dr(0)=0  &  u(r->inf) = 0 
+%
 % and exact solution,
-%      u(r) = 1/(1+r^2)  [FAST CONV.]
+%
+%      u(r) = 1/(1+r^2)   [FAST CONV.]
 %      or
 %      u(r) = r^2 e^(-r). [SLOW CONV.]
 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+function NonLinear_ODE
 
 Start_Num = 5;  %Number of collocation pts to start simulation
 End_Num =  50;  %Number of collocation pts to end simulation
@@ -431,8 +438,11 @@ NerrorInf(N) = maxError;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: plots the Convergence Rate for both 
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function plot_error_convergence(S,E,NerrorL2_F,NerrorInf_F,NerrorL2_S,NerrorInf_S)
 
@@ -474,9 +484,11 @@ ylabel('Log(Inf-Norm Error)')
 title('Error Convergence: Log(Inf-Norm Error) vs. N')
 legend('fast','slow');
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: returns the initial guess for a solution
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function val = initial_guess(N_A)
 
@@ -489,6 +501,10 @@ val = untmp';
 
 return
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: plots computational time needed to solve
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function plot_time_increase(S,E,time_F,time_S)
@@ -514,6 +530,10 @@ ylabel('Log(Time for Each Simulation)')
 title('Log(Time Complexity) vs. N')
 legend('fast','slow');
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: plots the spectral coefficients to show exponential decay
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function plot_coefficients(un_F,un_S)
@@ -550,28 +570,6 @@ ylabel('log( abs(c_n) ) (coefficient)')
 title('Spectral Coefficients: log(c_n) vs. n')
 legend('fast','slow');
 
-% for i=1:length(un_F)
-%    if mod(i,2) == 0
-%        un_F2(i) = un_F(i);
-%    else
-%        if ( (i ~= length(un_F)) && (i~= 1) )
-%            un_F2(i) = ( abs(un_F(i-1)) + abs(un_F(i+1)) )/2;  
-%        elseif i==length(un_F)
-%            un_F2(i) = 0;
-%        else
-%            un_F2(i) = un_F(i);
-%        end
-%    end
-% end
-% 
-% figure(20)
-% semilogy(count,abs(un_F2),'r*'); hold on;
-% semilogy(count,abs(un_S),'*'); hold on;
-% xlabel('n')
-% ylabel('log( abs(c_n) ) (coefficient)')
-% title('Spectral Coefficients: log(c_n) vs. n')
-% legend('fast','slow');
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -579,7 +577,7 @@ function print_info()
 
 fprintf('\n\nThis is a non-linear pseudo-spectral ODE solver over all R\n');
 fprintf('Author: Nicholas A. Battista \n');
-fprintf('Last update: September 2010\n\n');
+fprintf('Last update: September 2018\n\n');
 fprintf('Running the code solves the following non-linear ODE:\n\n');
 
 fprintf('     Laplacian(u) + 1/(1+u)^7 = f(x,y)\n\n');
