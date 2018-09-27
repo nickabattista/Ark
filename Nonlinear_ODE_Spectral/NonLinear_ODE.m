@@ -54,11 +54,11 @@ for N=Start_Num:End_Num
         
     %Finds solution for particular number of basis functions, N, for FAST convergence example
     fast = 1; %Flag to run the FAST example
-    [A un_F NerrorL2_F NerrorInf_F time_F] = find_Solution(N,NerrorL2_F,NerrorInf_F,time_F,fast);
+    [A, un_F, NerrorL2_F, NerrorInf_F, time_F] = find_Solution(N,NerrorL2_F,NerrorInf_F,time_F,fast);
     
     %Finds solution for particular number of basis functions, N, for SLOW convergence example
     fast = 0; %Flag to run the SLOW example
-    [A un_S NerrorL2_S NerrorInf_S time_S] = find_Solution(N,NerrorL2_S,NerrorInf_S,time_S,fast);
+    [A, un_S, NerrorL2_S, NerrorInf_S, time_S] = find_Solution(N,NerrorL2_S,NerrorInf_S,time_S,fast);
 
 
 end %ends for loop at beginning looping over number of grid pts
@@ -85,7 +85,7 @@ fprintf('\n\nThat is it! Thanks!\n\n');
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [A un NerrorL2 NerrorInf time] = find_Solution(N_A,NerrorL2,NerrorInf,time,fast)
+function [A, un, NerrorL2, NerrorInf, time] = find_Solution(N_A,NerrorL2,NerrorInf,time,fast)
 
 
 %collocation points in r and theta directions
@@ -100,7 +100,7 @@ fprintf('\n -------------------------------------------------------------- \n\n'
 fprintf('%d (# of basis functions in x and y)\n\n',N_A);
 
 %Stores Function,Deriv, and 2nd Deriv. Cheby. Poly Values
-[TAA TA_P TA_PP] = all_Cheby(A);
+[TAA, TA_P, TA_PP] = all_Cheby(A);
 
 if fast == 1
     fprintf('NEWTON METHOD FOR FAST CONVERGENCE EXAMPLE\n');
@@ -124,7 +124,7 @@ time(N_A) = toc;
 
 fprintf('Newton Method Converged within tol of %d\n\n',tol);
 
-[NerrorL2 NerrorInf] = expconv(N_A,un,NerrorL2,NerrorInf,fast);
+[NerrorL2, NerrorInf] = expconv(N_A,un,NerrorL2,NerrorInf,fast);
 
 %Nerror = SupNormExpConv(N_A,Nerror,Sinitial,un);
 
@@ -366,7 +366,7 @@ end
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [TA TA_p TA_pp] = all_Cheby(A)
+function [T, TA_p, TA_pp] = all_Cheby(A)
 
 len = length(A);
 TA = zeros(len,len);
