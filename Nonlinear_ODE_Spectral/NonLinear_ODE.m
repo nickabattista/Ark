@@ -37,10 +37,11 @@ End_Num =  50;  %Number of collocation pts to end simulation
 
 print_info();
 
-for N=Start_Num:End_Num
+%
+% Sweeps over different #'s of collocation pts to compare accuracies
+for N=Start_Num:End_Num 
     
-    %For first iteration, constructs the vectors containing the errors fr 
-    %fast and slow convergence examples
+    %For first iteration, initializes the vectors containing the errors for fast and slow convergence examples
     if N==Start_Num
         NerrorL2_F = zeros(1,N);
         NerrorInf_F = NerrorL2_F;
@@ -49,16 +50,13 @@ for N=Start_Num:End_Num
         NerrorL2_S = NerrorL2_F;
         NerrorInf_S = NerrorL2_F;
         time_S = NerrorL2_F;
-        
     end
         
-    %Finds solution for particular number of basis functions, N, for FAST
-    %convergence example
+    %Finds solution for particular number of basis functions, N, for FAST convergence example
     fast = 1; %Flag to run the FAST example
     [A un_F NerrorL2_F NerrorInf_F time_F] = find_Solution(N,NerrorL2_F,NerrorInf_F,time_F,fast);
     
-    %Finds solution for particular number of basis functions, N, for SLOW
-    %convergence example
+    %Finds solution for particular number of basis functions, N, for SLOW convergence example
     fast = 0; %Flag to run the SLOW example
     [A un_S NerrorL2_S NerrorInf_S time_S] = find_Solution(N,NerrorL2_S,NerrorInf_S,time_S,fast);
 
@@ -80,9 +78,12 @@ plot_coefficients(un_F,un_S)
 fprintf('\n\nThat is it! Thanks!\n\n');
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: finds the approximate solution to the PDF for a particular
+%           number of collocation pts, N_A
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [A un NerrorL2 NerrorInf time] = find_Solution(N_A,NerrorL2,NerrorInf,time,fast)
 
@@ -128,7 +129,11 @@ fprintf('Newton Method Converged within tol of %d\n\n',tol);
 %Nerror = SupNormExpConv(N_A,Nerror,Sinitial,un);
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: returns collocation grid points!
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function val = cheby_collocation_points(N)
 
@@ -139,7 +144,12 @@ end
 val = x'; %% Need transpose
 return
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: plots the collocation grid
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function plot_collocation_grid(N_A,A)
 
 fprintf('\nplotting collocation grids...\n');
@@ -153,7 +163,9 @@ title('Collocation Points')
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%Builds Jacobian Matrix
+%
+% FUNCTION: Builds Jacobian Matrix
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function jac = jacobian(N_A,A,TAA,TA_P,TA_PP,un)
@@ -185,9 +197,11 @@ end
 
 return
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%Builds Right Hand Side (Boundary Conditions) [ie- Right hand Side of Lu = f]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: Builds Right Hand Side (Boundary Conditions) [ie- Right hand Side of PDE, e.g., Lu = f]
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function val = build_rhs(N_A,A,un,fast)               
 
@@ -222,8 +236,10 @@ val = rhs';
 return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%Series u(x,y)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: gives the value of the approximation series, u(x,y)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function val = interpolateAB(N_A,A,un)            
 
@@ -240,7 +256,9 @@ end
 return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%Series u(x,y)
+%
+% FUNCTION: gives the value of the derivative of the approximation series, u'(x,y)
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function val = interpolateAB_p(N_A,A,un)            
@@ -258,7 +276,9 @@ end
 return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%PDE Series del^2(u)(x,y)
+%
+% FUNCTION: computes Laplacian in new coordinates, del^2(u)(x,y)
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function val = Laplacian(N_A,A,un)            
@@ -277,8 +297,11 @@ end
 return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%T''(x)  (2nd Derivative of Chebyshev Function); jth Cheby. polynomial
+%
+% FUNCTION: T''(x) (2nd Derivative of Chebyshev Function of 1st Kind)
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function val = Tpp(j,x)           
 
 if x == 1
@@ -290,15 +313,21 @@ else
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%T'(x)  (1st Derivative of Chebyshev Function); jth Cheby. polynomial
+%
+% FUNCTION: T'(x) (1st Derivative of Chebyshev Function of 1st Kind)
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function val = Tp(j,x)           
 
 val = j*U(j-1,x);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%T(x)     (Chebyshev Function); jth polynomial
+%
+% FUNCTION: T(x) (Chebyshev Function of 1st Kind); jth Cheby. polynomial
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function val = T(j,x)             
 
 if x == 1
@@ -310,8 +339,11 @@ else
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%U(x)    (2nd Chebyshev Function); jth 2nd Cheby. polynomial
+%
+% FUNCTION: U(x) (Chebyshev Function of 2nd Kind); jth 2nd Cheby. polynomial
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function val = U(j,x)            
 
 if x == 1
@@ -325,9 +357,14 @@ else
 end
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: Stores chebyshev polynomials (and 1st & 2nd derivatives) in a
+% matrix that is indexed by: 
+%                            MAT(k,a): k - which polynomial index, T_k
+%                                      a - which collocation pt. index, "X_a"
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [TA TA_p TA_pp] = all_Cheby(A)
 
@@ -345,8 +382,11 @@ end
 
 return
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: plots the approximate solutions vs. the exact solutions
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function plot_solution(N,un_F,un_S)
 
@@ -386,11 +426,18 @@ ezplot('((1+A)/(1-A))^2*exp(-((1+A)/(1-A)))',[-1 1])
 title('Exact Soln: u(r) = r^2 exp(-r) [SLOW CONV.]')
 axis([-1 1 -0.1 0.6]);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FUNCTION: computes the error between approximate solution and exact
+%           solution.
+%
+%           RETURNS: -2 vectors containing L2-error and Inf-error 
+%                    -each vector index corresponds to different # of
+%                          collocation pts.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function [NerrorL2 NerrorInf] = expconv(N,un,NerrorL2,NerrorInf,fast)
+function [NerrorL2, NerrorInf] = expconv(N,un,NerrorL2,NerrorInf,fast)
 
 %Grids to compare solution over
 AAA = -1:0.1:1;
@@ -440,7 +487,8 @@ NerrorInf(N) = maxError;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% FUNCTION: plots the Convergence Rate for both 
+% FUNCTION: plots the Convergence Rates for both cases - "fast" and "slow"
+%           convergence
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
