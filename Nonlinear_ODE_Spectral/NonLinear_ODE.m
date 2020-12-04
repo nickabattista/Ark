@@ -6,7 +6,7 @@
 % Institution (current): The College of New Jersey (TCNJ)
 % Institution (created): Rochester Institute of Technology
 % Date Created: August 2009
-% Last update: September 2018
+% Last update:  December 2020
 %
 % Running the code solves the following non-linear ODE:
 % 
@@ -36,6 +36,7 @@ Start_Num = 5;  %Number of collocation pts to start simulation
 End_Num =  50;  %Number of collocation pts to end simulation
 
 print_info();
+
 
 %
 % Sweeps over different #'s of collocation pts to compare accuracies
@@ -131,7 +132,7 @@ fprintf('Newton Method Converged within tol of %d\n\n',tol);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% FUNCTION: returns collocation grid points!
+% FUNCTION: s collocation grid points!
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -142,7 +143,7 @@ for i=1:N+1
     x(N+2-i) = cos(pi*(i-1)/N);
 end
 val = x'; %% Need transpose
-return
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -155,11 +156,15 @@ function plot_collocation_grid(N_A,A)
 fprintf('\nplotting collocation grids...\n');
 
 figure(1)
+%
+fs = 15; % FontSize
+%
 for k = 1:N_A+1
-            plot(A(k),0,'o'); hold on;
+            plot(A(k),0,'mo','MarkerFaceColor','m'); hold on;
 end
 xlabel('A')
-title('Collocation Points')
+title('Collocation Points');
+set(gca,'FontSize',fs);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -195,7 +200,7 @@ for a = 1:N_A+1                             %%Runs over Chebyshev Collocation po
 
 end
 
-return
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -233,7 +238,7 @@ end
 
 val = rhs';
 
-return
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -253,7 +258,7 @@ for m =1:N_A+1
 
 end
 
-return
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -273,7 +278,7 @@ for m =1:N_A+1
 
 end
 
-return
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -294,7 +299,7 @@ for j = 1:N_A+1
 
 end
 
-return
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -366,7 +371,7 @@ end
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [T, TA_p, TA_pp] = all_Cheby(A)
+function [TA, TA_p, TA_pp] = all_Cheby(A)
 
 len = length(A);
 TA = zeros(len,len);
@@ -380,7 +385,7 @@ for a=1:length(A)
     end
 end
 
-return
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -401,30 +406,62 @@ for i = 1:length(xx)
         umatrix_S(i) = interpolateAB(N,xx(i),un_S);
 end
 
+
+%------------------
+% Exact Solutions
+%------------------
+A=xx;
+SOL1 = 1./( 1+ ( (1+A)./(1-A) ).^2 );
+SOL2 = ( (1+A)./(1-A) ).^2 .* exp(- ( (1+A)./(1-A) ) );
+
 figure(2)
-subplot(2,2,1)
-plot(xx,umatrix_F,'r')
+%
+lw=8;  % LineWidth
+fs=15; % FontSize
+%
+subplot(1,2,1)
+plot(xx,SOL1,'k-','LineWidth',lw-3); hold on;
+plot(xx,umatrix_F,'r-','LineWidth',lw-3); hold on;
+plot(xx,SOL1,'k-','LineWidth',lw); hold on;
+plot(xx,umatrix_F,'r-','LineWidth',lw-5); hold on;
 xlabel('A')
 ylabel('U(A)')
-title('Numerical Soln: u(r) = 1/(1+r^2) [FAST CONV.]')
+title('Soln: u(r) = 1/(1+r^2) [FAST CONV.]');
+leg=legend('Exact','Numerical');
 axis([-1 1 -0.1 1.1]);
+set(leg,'FontSize',fs);
+set(gca,'FontSize',fs);
 
-subplot(2,2,2)
-ezplot('1/(1+((1+A)/(1-A))^2)',[-1 1])
-title('Exact Soln: u(r)=1/(1+r^2) [FAST CONV.]')
-axis([-1 1 -0.1 1.1]);
-
-subplot(2,2,3)
-plot(xx,umatrix_S,'r')
+subplot(1,2,2)
+plot(xx,SOL2,'k-','LineWidth',lw-3); hold on;
+plot(xx,umatrix_S,'r-','LineWidth',lw-3); hold on;
+plot(xx,SOL2,'k-','LineWidth',lw); hold on;
+plot(xx,umatrix_S,'r-','LineWidth',lw-5); hold on;
 xlabel('A')
 ylabel('U(A)')
-title('Numerical Soln: u(r) = r^2 exp(-r) [SLOW CONV.]')
+title('Soln: u(r) = r^2 exp(-r) [SLOW CONV.]')
+leg=legend('Exact','Numerical');
 axis([-1 1 -0.1 0.6]);
+set(leg,'FontSize',fs);
+set(gca,'FontSize',fs);
 
-subplot(2,2,4)
-ezplot('((1+A)/(1-A))^2*exp(-((1+A)/(1-A)))',[-1 1])
-title('Exact Soln: u(r) = r^2 exp(-r) [SLOW CONV.]')
-axis([-1 1 -0.1 0.6]);
+
+% subplot(2,2,2)
+% ezplot('1/(1+((1+A)/(1-A))^2)',[-1 1])
+% title('Exact Soln: u(r)=1/(1+r^2) [FAST CONV.]')
+% axis([-1 1 -0.1 1.1]);
+% 
+% subplot(2,2,3)
+% plot(xx,umatrix_S,'r-','LineWidth',lw)
+% xlabel('A')
+% ylabel('U(A)')
+% title('Numerical Soln: u(r) = r^2 exp(-r) [SLOW CONV.]')
+% axis([-1 1 -0.1 0.6]);
+% 
+% subplot(2,2,4)
+% ezplot('((1+A)/(1-A))^2*exp(-((1+A)/(1-A)))',[-1 1])
+% title('Exact Soln: u(r) = r^2 exp(-r) [SLOW CONV.]')
+% axis([-1 1 -0.1 0.6]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -497,44 +534,55 @@ function plot_error_convergence(S,E,NerrorL2_F,NerrorInf_F,NerrorL2_S,NerrorInf_
 fprintf('\nplotting error convergence...\n');
 
 count = 1:1:E;
-
+%
+ms=7;  % MarkerSize
+fs=15; % FontSize
+%
 figure(3)
 %
 subplot(2,2,1)
-plot(count(S:E),NerrorL2_F(S:E),'r*'); hold on;
-plot(count(S:E),NerrorL2_S(S:E),'*');
+plot(count(S:E),NerrorL2_F(S:E),'ro','MarkerSize',ms,'MarkerFaceColor','r'); hold on;
+plot(count(S:E),NerrorL2_S(S:E),'b^','MarkerSize',ms,'MarkerFaceColor','b');
 xlabel('N')
 ylabel('L2-Error')
 title('Error Convergence: L2-Error vs. N')
-legend('fast','slow');
+leg=legend('fast','slow');
+set(leg,'FontSize',fs);
+set(gca,'FontSize',fs);
 %
 subplot(2,2,2)
-semilogy(count(S:E),NerrorL2_F(S:E),'r*'); hold on;
-semilogy(count(S:E),NerrorL2_S(S:E),'*');
+semilogy(count(S:E),NerrorL2_F(S:E),'ro','MarkerSize',ms,'MarkerFaceColor','r'); hold on;
+semilogy(count(S:E),NerrorL2_S(S:E),'b^','MarkerSize',ms,'MarkerFaceColor','b');
 xlabel('N')
-ylabel('Log(L2-Error)')
+ylabel('L2-Error')
 title('Error Convergence: Log(L2-Error) vs. N')
-legend('fast','slow');
+leg=legend('fast','slow');
+set(leg,'FontSize',fs);
+set(gca,'FontSize',fs);
 %
 subplot(2,2,3)
-plot(count(S:E),NerrorInf_F(S:E),'r*'); hold on;
-plot(count(S:E),NerrorInf_S(S:E),'*');
+plot(count(S:E),NerrorInf_F(S:E),'ro','MarkerSize',ms,'MarkerFaceColor','r'); hold on;
+plot(count(S:E),NerrorInf_S(S:E),'b^','MarkerSize',ms,'MarkerFaceColor','b');
 xlabel('N')
 ylabel('Inf-Norm Error')
 title('Error Convergence: Inf-Norm Error vs. N')
-legend('fast','slow');
+leg=legend('fast','slow');
+set(leg,'FontSize',fs);
+set(gca,'FontSize',fs);
 %
 subplot(2,2,4)
-semilogy(count(S:E),NerrorInf_F(S:E),'r*'); hold on;
-semilogy(count(S:E),NerrorInf_S(S:E),'*');
+semilogy(count(S:E),NerrorInf_F(S:E),'ro','MarkerSize',ms,'MarkerFaceColor','r'); hold on;
+semilogy(count(S:E),NerrorInf_S(S:E),'b^','MarkerSize',ms,'MarkerFaceColor','b');
 xlabel('N')
-ylabel('Log(Inf-Norm Error)')
+ylabel('Inf-Norm Error')
 title('Error Convergence: Log(Inf-Norm Error) vs. N')
-legend('fast','slow');
+leg=legend('fast','slow');
+set(leg,'FontSize',fs);
+set(gca,'FontSize',fs);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% FUNCTION: returns the initial guess for a solution
+% FUNCTION: s the initial guess for a solution
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -547,7 +595,7 @@ end
 
 val = untmp';
 
-return
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -561,22 +609,29 @@ fprintf('\nplotting time complexity...\n');
 
 count = 1:1:E;
 
+ms = 7;  % MarkerSize
+fs = 15; % FontSize
+
 figure(4)
 subplot(1,2,1);
-plot(count(S:E),time_F(S:E),'r*'); hold on;
-plot(count(S:E),time_S(S:E),'*'); hold on;
+plot(count(S:E),time_F(S:E),'ro','MarkerSize',ms,'MarkerFaceColor','r'); hold on;
+plot(count(S:E),time_S(S:E),'b^','MarkerSize',ms,'MarkerFaceColor','b'); hold on;
 xlabel('N')
 ylabel('Time for Each Simulation')
 title('Time Complexity vs. N')
-legend('fast','slow');
+leg=legend('fast','slow');
+set(leg,'FontSize',fs);
+set(gca,'FontSize',fs);
 %
 subplot(1,2,2);
-semilogy(count(S:E),time_F(S:E),'r*'); hold on;
-semilogy(count(S:E),time_S(S:E),'*');
+semilogy(count(S:E),time_F(S:E),'ro','MarkerSize',ms,'MarkerFaceColor','r'); hold on;
+semilogy(count(S:E),time_S(S:E),'b^','MarkerSize',ms,'MarkerFaceColor','b');
 xlabel('N')
-ylabel('Log(Time for Each Simulation)')
-title('Log(Time Complexity) vs. N')
-legend('fast','slow');
+ylabel('Time for Each Simulation')
+title('Time Complexity vs. N')
+leg=legend('fast','slow');
+set(leg,'FontSize',fs);
+set(gca,'FontSize',fs);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -590,33 +645,41 @@ fprintf('\nplotting spectral coefficients...\n');
 
 count = 0:1:length(un_F)-1;
 
+ms = 7;  % MarkerSize
+fs = 15; % FontSize
 
 figure(5)
 subplot(2,2,1);
-plot(count,un_F,'r*'); hold on;
-plot(count,un_S,'*'); hold on;
+plot(count,un_F,'ro','MarkerSize',ms,'MarkerFaceColor','r'); hold on;
+plot(count,un_S,'b^','MarkerSize',ms,'MarkerFaceColor','b'); hold on;
 xlabel('n')
-ylabel('c_n (coefficient)')
+ylabel('c_n (coefficients)')
 title('Spectral Coefficients: abs(c_n) vs. n')
-legend('fast','slow');
+leg=legend('fast','slow');
 axis([0 length(un_F)-1 -0.6 0.6]);
+set(leg,'FontSize',fs);
+set(gca,'FontSize',fs);
 
 subplot(2,2,2);
-plot(count,abs(un_F),'r*'); hold on;
-plot(count,abs(un_S),'*'); hold on;
+plot(count,abs(un_F),'ro','MarkerSize',ms,'MarkerFaceColor','r'); hold on;
+plot(count,abs(un_S),'b^','MarkerSize',ms,'MarkerFaceColor','b'); hold on;
 xlabel('n')
-ylabel('abs(c_n) (mag. of coefficient)')
+ylabel('|c_n| (mag. of coefficient)')
 title('Spectral Coefficients: abs(c_n) vs. n')
-legend('fast','slow');
+leg=legend('fast','slow');
 axis([0 length(un_F)-1 0 0.6]);
+set(leg,'FontSize',fs);
+set(gca,'FontSize',fs);
 
 subplot(2,2,3:4);
-semilogy(count,abs(un_F),'ro'); hold on;
-semilogy(count,abs(un_S),'*'); hold on;
+semilogy(count,abs(un_F),'ro','MarkerSize',ms,'MarkerFaceColor','r'); hold on;
+semilogy(count,abs(un_S),'b^','MarkerSize',ms,'MarkerFaceColor','b'); hold on;
 xlabel('n')
-ylabel('log( abs(c_n) ) (coefficient)')
+ylabel('|c_n| (mag. of coefficients)')
 title('Spectral Coefficients: log(c_n) vs. n')
-legend('fast','slow');
+leg=legend('fast','slow');
+set(leg,'FontSize',fs);
+set(gca,'FontSize',fs);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
